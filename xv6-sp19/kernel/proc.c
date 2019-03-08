@@ -93,10 +93,10 @@ userinit(void)
   p->tf->eflags = FL_IF;
   p->tf->esp = 5*PGSIZE;
   p->tf->eip = 4*PGSIZE;  // beginning of initcode.S
-
+//  cprintf("%d \n",p->stackp);
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
-
+  p->stackp = USERTOP - PGSIZE;
   p->state = RUNNABLE;
   release(&ptable.lock);
 }
@@ -133,9 +133,9 @@ fork(void)
   // Allocate process.
   if((np = allocproc()) == 0)
     return -1;
-
+  // cprintf("%d, %d\n", proc->sz, proc->stackp);
   // Copy process state from p.
-  if((np->pgdir = copyuvm(proc->pgdir, proc->sz)) == 0){
+  if((np->pgdir = copyuvm(proc->pgdir, proc->sz, proc->stackp)) == 0){
     kfree(np->kstack);
     np->kstack = 0;
     np->state = UNUSED;
@@ -143,6 +143,7 @@ fork(void)
   }
   np->sz = proc->sz;
   np->parent = proc;
+  np->stackp =  USERTOP - PGSIZE;
   *np->tf = *proc->tf;
 
   // Clear %eax so that fork returns 0 in the child.
@@ -156,6 +157,7 @@ fork(void)
   pid = np->pid;
   np->state = RUNNABLE;
   safestrcpy(np->name, proc->name, sizeof(proc->name));
+  //cprintf("%d\n", np->stackp);
   return pid;
 }
 

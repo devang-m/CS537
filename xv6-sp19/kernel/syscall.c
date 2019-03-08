@@ -7,6 +7,7 @@
 #include "syscall.h"
 #include "sysfunc.h"
 
+
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
 // Arguments on the stack, from the user call to the C
@@ -17,11 +18,24 @@
 int
 fetchint(struct proc *p, uint addr, int *ip)
 {
-  if(addr >= p->sz || addr+4 > p->sz)
+  //cprintf("%d\n", addr);
+  if ((addr < p->stackp) && (addr >= p->stackp-PGSIZE) && (p->stackp - p->sz >= 5*PGSIZE)) {
+    int stackpointer = allocuvm(p->pgdir,p->stackp-PGSIZE, p->stackp);
+    p->stackp = stackpointer-PGSIZE; 
+  }
+  // Seems to be fine
+  if (addr < 4*PGSIZE || addr + 4 >= USERTOP) {
+    // cprintf("%d  %d %d %d\n", addr, p->sz, p->stackp);
     return -1;
+  }
+  if ((addr >= p->sz || addr+4 > p->sz) && (addr <= p->stackp || addr-4 < p->stackp)) {
+    // cprintf("%d %d %d\n", addr, p->sz, p->stackp);
+    return -1;
+  }
   *ip = *(int*)(addr);
   return 0;
 }
+
 
 // Fetch the nul-terminated string at addr from process p.
 // Doesn't actually copy the string - just sets *pp to point at it.
@@ -30,14 +44,26 @@ int
 fetchstr(struct proc *p, uint addr, char **pp)
 {
   char *s, *ep;
-
-  if(addr >= p->sz)
+  if (addr < 4*PGSIZE || addr > USERTOP) {
+    // cprintf("%d  %d %d %d\n", addr, p->sz, p->stackp);
     return -1;
+  }
+  if(addr >= p->sz && addr < p->stackp) {
+    // cprintf("%d %d %d\n", addr, p->sz, p->stackp);
+    return -1;
+  }
   *pp = (char*)addr;
   ep = (char*)p->sz;
-  for(s = *pp; s < ep; s++)
-    if(*s == 0)
-      return s - *pp;
+  if (addr < p->sz) {
+    for(s = *pp; s < ep; s++)
+      if(*s == 0)
+	return s - *pp;
+  }
+  else {
+    for(s = *pp; s < (char*)(USERTOP); s++)
+      if(*s == 0)
+	return s - *pp;
+  }
   return -1;
 }
 
@@ -56,10 +82,19 @@ argptr(int n, char **pp, int size)
 {
   int i;
   
-  if(argint(n, &i) < 0)
+  if (argint(n, &i) < 0)
     return -1;
-  if((uint)i >= proc->sz || (uint)i+size > proc->sz)
+  
+  // Works fine
+  if ((uint)i < 4*PGSIZE || (uint)i+size > USERTOP || (uint)i >= USERTOP) {
+    // cprintf("3 %d  %d %d %d\n", i, size, proc->sz, proc->stackp);
     return -1;
+  }
+  if (((uint)i >= proc->sz || (uint)i+size > proc->sz) && ((uint)i < proc->stackp)) {
+    // cprintf("3 %d  %d %d %d\n", i, size, proc->sz, proc->stackp);
+    return -1;
+  }
+  //cprintf("fdss\n");
   *pp = (char*)i;
   return 0;
 }
