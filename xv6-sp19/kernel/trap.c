@@ -78,6 +78,11 @@ trap(struct trapframe *tf)
   case T_PGFLT:
     if(growstack(rcr2()) == 0)
       return;
+    // else {
+    //   proc->killed = 1;
+    //   exit();
+    // }
+    // break;
   default:
     if(proc == 0 || (tf->cs&3) == 0){
       // In kernel, it must be our mistake.
