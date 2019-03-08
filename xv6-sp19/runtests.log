@@ -8,8 +8,6 @@ build xv6 using make
 **********************************************************************
 Trying to clean project using make clean
 make clean
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG kernel/trap.c -MF kernel/trap.d -MT kernel/trap.d -MT kernel/trap.o
 rm -rf kernel/bio.o kernel/console.o kernel/exec.o kernel/file.o kernel/fs.o kernel/ide.o kernel/ioapic.o kernel/kalloc.o kernel/kbd.o kernel/lapic.o kernel/main.o kernel/mp.o kernel/picirq.o kernel/pipe.o kernel/proc.o kernel/spinlock.o kernel/string.o kernel/swtch.o kernel/syscall.o kernel/sysfile.o kernel/sysproc.o kernel/timer.o kernel/trapasm.o kernel/trap.o kernel/uart.o kernel/vectors.o kernel/vm.o kernel/bootmain.o kernel/bootasm.o kernel/multiboot.o kernel/data.o kernel/bootother.o kernel/initcode.o kernel/bio.d kernel/console.d kernel/exec.d kernel/file.d kernel/fs.d kernel/ide.d kernel/ioapic.d kernel/kalloc.d kernel/kbd.d kernel/lapic.d kernel/main.d kernel/mp.d kernel/picirq.d kernel/pipe.d kernel/proc.d kernel/spinlock.d kernel/string.d kernel/swtch.d kernel/syscall.d kernel/sysfile.d kernel/sysproc.d kernel/timer.d kernel/trapasm.d kernel/trap.d kernel/uart.d kernel/vectors.d kernel/vm.d kernel/bootmain.d kernel/bootasm.d kernel/multiboot.d kernel/data.d kernel/bootother.d kernel/initcode.d kernel/vectors.S kernel/bootblock kernel/bootblock.out kernel/bootother.out kernel/initcode.out kernel/kernel bootother initcode xv6.img user/bin user/cat user/echo user/forktest user/grep user/init user/kill user/ln user/ls user/mkdir user/rm user/sh user/stressfs user/tester user/usertests user/wc user/zombie user/cat.o user/echo.o user/forktest.o user/grep.o user/init.o user/kill.o user/ln.o user/ls.o user/mkdir.o user/rm.o user/sh.o user/stressfs.o user/tester.o user/usertests.o user/wc.o user/zombie.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/cat.d user/echo.d user/forktest.d user/grep.d user/init.d user/kill.d user/ln.d user/ls.d user/mkdir.d user/rm.d user/sh.d user/stressfs.d user/tester.d user/usertests.d user/wc.d user/zombie.d user/ulib.d user/usys.d user/printf.d user/umalloc.d tools/mkfs tools/mkfs.o tools/mkfs.d fs fs.img .gdbinit .bochsrc dist
 Trying to build project using make
 make
@@ -231,15 +229,15 @@ ld  -m    elf_i386 -nostdlib --omagic \
 dd if=/dev/zero of=xv6.img count=10000
 10000+0 records in
 10000+0 records out
-5120000 bytes (5.1 MB, 4.9 MiB) copied, 0.0157138 s, 326 MB/s
+5120000 bytes (5.1 MB, 4.9 MiB) copied, 0.0159367 s, 321 MB/s
 dd if=kernel/bootblock of=xv6.img conv=notrunc
 1+0 records in
 1+0 records out
-512 bytes copied, 6.0586e-05 s, 8.5 MB/s
+512 bytes copied, 5.0956e-05 s, 10.0 MB/s
 dd if=kernel/kernel of=xv6.img seek=1 conv=notrunc
 256+1 records in
 256+1 records out
-131240 bytes (131 kB, 128 KiB) copied, 0.000393616 s, 333 MB/s
+131244 bytes (131 kB, 128 KiB) copied, 0.000352864 s, 372 MB/s
 gcc -c  -iquote include -Wall -Werror -ggdb  -o tools/mkfs.o tools/mkfs.c
 gcc  tools/mkfs.o -o tools/mkfs
 mkdir -p fs
@@ -378,8 +376,7 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-null dereference: pid 4 tester: trap 14 err 4 on cpu 1 eip 0x403e addr 0x0--kill proc
-TEST PASSED
+null dereference: TEST PASSED
 
 
 test null PASSED (10 of 10)
@@ -439,8 +436,8 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-bad dereference (0x1001): pid 4 tester: trap 14 err 4 on cpu 1 eip 0x403e addr 0x1001--kill proc
-TEST PASSED
+bad dereference (0x1001): TEST PASSED
+
 
 test null2 PASSED (10 of 10)
  (any dereference from first two pages should fault)
@@ -499,8 +496,7 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-bad dereference (0x2001): pid 4 tester: trap 14 err 4 on cpu 1 eip 0x403e addr 0x2001--kill proc
-TEST PASSED
+bad dereference (0x2001): TEST PASSED
 
 
 test null3 PASSED (5 of 5)
@@ -560,9 +556,7 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-bad dereference (0x3001): pid 4 tester: trap 14 err 4 on cpu 1 eip 0x403e addr 0x3001--kill proc
-TEST PASSED
-
+bad dereference (0x3001): TEST PASSED
 
 test null4 PASSED (5 of 5)
  (any dereference from first two pages should fault)
@@ -803,7 +797,6 @@ $ tester
 tester
 TEST PASSED
 
-
 test bounds_str PASSED (10 of 10)
  (syscall argument checks (string arg))
 
@@ -862,7 +855,6 @@ init: starting sh
 $ tester
 tester
 TEST PASSED
-
 
 test heap PASSED (10 of 10)
  (heap can grow to 5 pages below stack, but not more)
@@ -1041,7 +1033,6 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-pid 4 tester: trap 14 err 6 on cpu 1 eip 0x403c addr 0x9cfff--kill proc
 TEST PASSED
 
 
@@ -1102,7 +1093,6 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-pid 4 tester: trap 14 err 6 on cpu 1 eip 0x406b addr 0x9c000--kill proc
 TEST PASSED
 
 
@@ -1163,7 +1153,6 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-pid 4 tester: trap 14 err 6 on cpu 1 eip 0x418b addr 0x9c000--kill proc
 TEST PASSED
 
 
@@ -1210,311 +1199,5 @@ test shmem_invalidpg FAILED (0 of 5)
  (nclude "types.h")
  make failed (error 2)
 
-starting shmem_access_communication
-
-**********************************************************************
-
-Test shmem_access_communication
-nclude "types.h"
-
-**********************************************************************
-Running xv6 user progam /u/c/s/cs537-1/tests/p3b/ctests/shmem_access_communication.c
-Trying to build project using make
-make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:26:8: error: implicit declaration of function ‘shmget’; did you mean ‘memset’? [-Werror=implicit-function-declaration]
-  ptr = shmget(2);
-        ^~~~~~
-        memset
-user/tester.c:26:6: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  ptr = shmget(2);
-      ^
-cc1: all warnings being treated as errors
-user/makefile.mk:92: recipe for target 'user/tester.o' failed
-make: *** [user/tester.o] Error 1
-
-
-test shmem_access_communication FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-starting shmem_fork
-
-**********************************************************************
-
-Test shmem_fork
-nclude "types.h"
-
-**********************************************************************
-Running xv6 user progam /u/c/s/cs537-1/tests/p3b/ctests/shmem_fork.c
-Trying to build project using make
-make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:24:8: error: implicit declaration of function ‘shmget’; did you mean ‘memset’? [-Werror=implicit-function-declaration]
-  ptr = shmget(1);
-        ^~~~~~
-        memset
-user/tester.c:24:6: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  ptr = shmget(1);
-      ^
-user/tester.c:36:8: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr2 = shmget(1);
-        ^
-cc1: all warnings being treated as errors
-user/makefile.mk:92: recipe for target 'user/tester.o' failed
-make: *** [user/tester.o] Error 1
-
-
-test shmem_fork FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-starting shmem_access_exec2
-
-**********************************************************************
-
-Test shmem_access_exec2
-nclude "types.h"
-
-**********************************************************************
-Running xv6 user progam /u/c/s/cs537-1/tests/p3b/ctests/shmem_access_exec2.c
-Trying to build project using make
-make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:28:9: error: implicit declaration of function ‘shmget’; did you mean ‘memset’? [-Werror=implicit-function-declaration]
-   ptr = shmget(i);
-         ^~~~~~
-         memset
-user/tester.c:28:7: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr = shmget(i);
-       ^
-cc1: all warnings being treated as errors
-user/makefile.mk:92: recipe for target 'user/tester.o' failed
-make: *** [user/tester.o] Error 1
-
-
-test shmem_access_exec2 FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-starting shmem_access_exec
-
-**********************************************************************
-
-Test shmem_access_exec
-nclude "types.h"
-
-**********************************************************************
-Running xv6 user progam /u/c/s/cs537-1/tests/p3b/ctests/shmem_access_exec.c
-Trying to build project using make
-make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:28:9: error: implicit declaration of function ‘shmget’; did you mean ‘memset’? [-Werror=implicit-function-declaration]
-   ptr = shmget(i);
-         ^~~~~~
-         memset
-user/tester.c:28:7: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr = shmget(i);
-       ^
-cc1: all warnings being treated as errors
-user/makefile.mk:92: recipe for target 'user/tester.o' failed
-make: *** [user/tester.o] Error 1
-
-
-test shmem_access_exec FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-starting shmem_bound
-
-**********************************************************************
-
-Test shmem_bound
-nclude "types.h"
-
-**********************************************************************
-Running xv6 user progam /u/c/s/cs537-1/tests/p3b/ctests/shmem_bound.c
-Trying to build project using make
-make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:34:10: error: implicit declaration of function ‘shmget’; did you mean ‘memset’? [-Werror=implicit-function-declaration]
-   ptr1 = shmget(0);
-          ^~~~~~
-          memset
-user/tester.c:34:8: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr1 = shmget(0);
-        ^
-user/tester.c:37:8: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr2 = shmget(0);
-        ^
-cc1: all warnings being treated as errors
-user/makefile.mk:92: recipe for target 'user/tester.o' failed
-make: *** [user/tester.o] Error 1
-
-
-test shmem_bound FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-starting shmem_rw
-
-**********************************************************************
-
-Test shmem_rw
-nclude "types.h"
-
-**********************************************************************
-Running xv6 user progam /u/c/s/cs537-1/tests/p3b/ctests/shmem_rw.c
-Trying to build project using make
-make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:26:9: error: implicit declaration of function ‘shmget’; did you mean ‘memset’? [-Werror=implicit-function-declaration]
-   ptr = shmget(i);
-         ^~~~~~
-         memset
-user/tester.c:26:7: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr = shmget(i);
-       ^
-cc1: all warnings being treated as errors
-user/makefile.mk:92: recipe for target 'user/tester.o' failed
-make: *** [user/tester.o] Error 1
-
-
-test shmem_rw FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-starting shmem_access_persistent
-
-**********************************************************************
-
-Test shmem_access_persistent
-nclude "types.h"
-
-**********************************************************************
-Running xv6 user progam /u/c/s/cs537-1/tests/p3b/ctests/shmem_access_persistent.c
-Trying to build project using make
-make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:32:9: error: implicit declaration of function ‘shmget’; did you mean ‘memset’? [-Werror=implicit-function-declaration]
-   ptr = shmget(2);
-         ^~~~~~
-         memset
-user/tester.c:32:7: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr = shmget(2);
-       ^
-user/tester.c:46:7: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-   ptr = shmget(2);
-       ^
-cc1: all warnings being treated as errors
-user/makefile.mk:92: recipe for target 'user/tester.o' failed
-make: *** [user/tester.o] Error 1
-
-
-test shmem_access_persistent FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-**********************************************************************
-Summary:
-test build PASSED
- (build xv6 using make)
-
-test null PASSED (10 of 10)
- (null pointer dereference should kill process)
-
-test null2 PASSED (10 of 10)
- (any dereference from first two pages should fault)
-
-test null3 PASSED (5 of 5)
- (any dereference from first two pages should fault)
-
-test null4 PASSED (5 of 5)
- (any dereference from first two pages should fault)
-
-test bounds PASSED (10 of 10)
- (syscall argument checks (null page, code/heap boundaries))
-
-test stack PASSED (10 of 10)
- (stack should be at high end of address space)
-
-test bounds2 PASSED (5 of 5)
- (syscall argument checks (stack boundaries))
-
-test bounds_str PASSED (10 of 10)
- (syscall argument checks (string arg))
-
-test heap PASSED (10 of 10)
- (heap can grow to 5 pages below stack, but not more)
-
-test stack2 PASSED (5 of 5)
- (stack should grow automatically on a page fault, until 5 pages above heap)
-
-test bounds3 PASSED (3 of 3)
- (syscall argument checks (dynamic stack boundaries))
-
-test stack3 PASSED (2 of 2)
- (stack should only grow one page at a time)
-
-test stack4 PASSED (5 of 5)
- (stack should not grow into 5 pages above heap (program must terminate))
-
-test stack5 PASSED (5 of 5)
- (stack and heap grow together, reserving 5 pages in between)
-
-test shmem_invalidpg FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-test shmem_access_communication FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-test shmem_fork FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-test shmem_access_exec2 FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-test shmem_access_exec FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-test shmem_bound FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-test shmem_rw FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-test shmem_access_persistent FAILED (0 of 5)
- (nclude "types.h")
- make failed (error 2)
-
-Passed 15 of 23 tests.
-Overall 15 of 23
-Points 95 of 135
+Skipped 7 tests.
+To keep testing after failing a test, use flag '-c' or '--continue'
