@@ -9,7 +9,20 @@
 extern char data[];  // defined in data.S
 
 static pde_t *kpgdir;  // for use in scheduler()
+void* shared_addr[3];
 
+
+void sharedpages(void)
+{
+	cprintf("Initializing shared pages\n");
+	int i;
+	for (i=0; i<3; i++) {
+		//shared_count[i] = 0;
+		if ((shared_addr[i] = kalloc()) == 0)
+			panic("shared_addr failed");
+		 cprintf("%x\n", (unsigned int) shared_addr[i]);
+	}
+}
 // Allocate one page table for the machine for the kernel address
 // space for scheduler processes.
 void
