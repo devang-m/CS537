@@ -18,11 +18,6 @@
 int
 fetchint(struct proc *p, uint addr, int *ip)
 {
-  //cprintf("%d\n", addr);
-  if ((addr < p->stackp) && (addr >= p->stackp-PGSIZE) && (p->stackp - p->sz >= 5*PGSIZE)) {
-    int stackpointer = allocuvm(p->pgdir,p->stackp-PGSIZE, p->stackp);
-    p->stackp = stackpointer-PGSIZE; 
-  }
   // Seems to be fine
   if (addr < 4*PGSIZE || addr + 4 >= USERTOP) {
     // cprintf("%d  %d %d %d\n", addr, p->sz, p->stackp);

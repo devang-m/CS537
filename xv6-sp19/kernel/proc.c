@@ -109,7 +109,14 @@ growproc(int n)
   uint sz;
   
   sz = proc->sz;
+  // More than 5 pages needed
+  // uint temp = PGROUNDUP(sz + n);
+  if(n > 0 && (proc->sz + n > proc->stackp - 5*PGSIZE)) {
+    return -1;
+  }
+
   if(n > 0){
+
     if((sz = allocuvm(proc->pgdir, sz, sz + n)) == 0)
       return -1;
   } else if(n < 0){
@@ -118,6 +125,23 @@ growproc(int n)
   }
   proc->sz = sz;
   switchuvm(proc);
+  return 0;
+}
+
+int 
+growstack(uint address)
+{
+  // We only care about pagefault for 1 page below stack
+  if(address < proc->stackp - PGSIZE)
+    return -1;
+  // Checking if 5 pages are still there
+  if(proc->stackp < 6*PGSIZE + proc->sz)
+    return -1;
+  uint sp = allocuvm(proc->pgdir, proc->stackp - PGSIZE, proc->stackp);
+  // Allocation failed
+  if(sp == 0)
+    return -1;
+  proc->stackp = sp - PGSIZE;
   return 0;
 }
 
