@@ -165,6 +165,9 @@ fork(void)
     np->state = UNUSED;
     return -1;
   }
+  for(int i = 0; i < 3; i++) {
+    np->sharePageMap[i] = proc->sharePageMap[i];
+  }
   np->sz = proc->sz;
   np->parent = proc;
   np->stackp =  USERTOP - PGSIZE;

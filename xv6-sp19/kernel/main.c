@@ -62,7 +62,7 @@ mainc(void)
   cinit();
   sti();           // enable inturrupts
   userinit();      // first user process
-  //sharedpages(); //kalloc for shared physical pages
+  sharedpages();   //kalloc for shared physical pages
   scheduler();     // start running processes
 }
 

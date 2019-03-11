@@ -92,6 +92,9 @@ exec(char *path, char **argv)
   proc->tf->eip = elf.entry;  // main
   proc->tf->esp = sp;
   proc->stackp = USERTOP - PGSIZE;
+  for(int i = 0; i < 3; i++) {
+    proc->sharePageMap[i] = -1;
+  }
   // cprintf("%d HI\n", proc->tf->esp);
   switchuvm(proc);
   freevm(oldpgdir);

@@ -14,13 +14,10 @@ void* shared_addr[3];
 
 void sharedpages(void)
 {
-	cprintf("Initializing shared pages\n");
 	int i;
 	for (i=0; i<3; i++) {
-		//shared_count[i] = 0;
 		if ((shared_addr[i] = kalloc()) == 0)
 			panic("shared_addr failed");
-		 cprintf("%x\n", (unsigned int) shared_addr[i]);
 	}
 }
 // Allocate one page table for the machine for the kernel address
@@ -161,6 +158,13 @@ setupkvm(void)
   return pgdir;
 }
 
+int 
+mapsharedpage(int i, int n)
+{
+  return mappages(proc->pgdir, (void*)(4096*(i+1)), PGSIZE, PADDR(shared_addr[n]), PTE_W|PTE_U);
+}
+
+
 // Turn on paging.
 void
 vmenable(void)
@@ -299,7 +303,7 @@ freevm(pde_t *pgdir)
 
   if(pgdir == 0)
     panic("freevm: no pgdir");
-  deallocuvm(pgdir, USERTOP, 0);
+  deallocuvm(pgdir, USERTOP, 4*PGSIZE);
   for(i = 0; i < NPDENTRIES; i++){
     if(pgdir[i] & PTE_P)
       kfree((char*)PTE_ADDR(pgdir[i]));
@@ -344,6 +348,14 @@ copyuvm(pde_t *pgdir, uint sz, uint sp)
     memmove(mem, (char*)pa, PGSIZE);
     if(mappages(d, (void*)i, PGSIZE, PADDR(mem), PTE_W|PTE_U) < 0)
       goto bad;
+  }
+
+  for(i = 0; i < 3; i++){
+    if(proc->sharePageMap[i] != -1) {
+      int pageNumber = proc->sharePageMap[i];
+      if(mappages(d, (void*)(4096*(i+1)), PGSIZE, PADDR(shared_addr[pageNumber]), PTE_W|PTE_U) < 0)
+        goto bad;
+    }
   }
 
   return d;

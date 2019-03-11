@@ -19,8 +19,12 @@ int
 fetchint(struct proc *p, uint addr, int *ip)
 {
   // Seems to be fine
-  if (addr < 4*PGSIZE || addr + 4 >= USERTOP) {
-    // cprintf("%d  %d %d %d\n", addr, p->sz, p->stackp);
+  if (addr < 4*PGSIZE) {
+    int pos = addr/4096;
+    if(addr < 0 || pos == 0 || p->sharePageMap[pos-1]==-1)
+      return -1;
+  } 
+  if (addr + 4 >= USERTOP) {
     return -1;
   }
   if ((addr >= p->sz || addr+4 > p->sz) && (addr <= p->stackp || addr-4 < p->stackp)) {
@@ -39,12 +43,16 @@ int
 fetchstr(struct proc *p, uint addr, char **pp)
 {
   char *s, *ep;
-  if (addr < 4*PGSIZE || addr > USERTOP) {
+  if (addr < 4*PGSIZE) {
+    int pos = addr/4096;
+    if(addr < 0 || pos == 0 || p->sharePageMap[pos-1]==-1)
+      return -1;
+  } 
+  if (addr > USERTOP) {
     // cprintf("%d  %d %d %d\n", addr, p->sz, p->stackp);
     return -1;
   }
   if(addr >= p->sz && addr < p->stackp) {
-    // cprintf("%d %d %d\n", addr, p->sz, p->stackp);
     return -1;
   }
   *pp = (char*)addr;
@@ -81,7 +89,13 @@ argptr(int n, char **pp, int size)
     return -1;
   
   // Works fine
-  if ((uint)i < 4*PGSIZE || (uint)i+size > USERTOP || (uint)i >= USERTOP) {
+  if ((uint)i < 4*PGSIZE) {
+    int pos = (uint)i/4096;
+    int pos2 = (uint)(i+size)/4096;
+    if((uint)i < 0 || pos == 0 || proc->sharePageMap[pos-1]==-1 || proc->sharePageMap[pos2-1]==-1)
+      return -1;
+  } 
+  if ((uint)i+size > USERTOP || (uint)i >= USERTOP) {
     // cprintf("3 %d  %d %d %d\n", i, size, proc->sz, proc->stackp);
     return -1;
   }
@@ -133,6 +147,7 @@ static int (*syscalls[])(void) = {
 [SYS_wait]    sys_wait,
 [SYS_write]   sys_write,
 [SYS_uptime]  sys_uptime,
+[SYS_shmget]  sys_shmget,
 };
 
 // Called on a syscall trap. Checks that the syscall number (passed via eax)

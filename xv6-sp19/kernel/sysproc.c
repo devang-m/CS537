@@ -6,6 +6,8 @@
 #include "proc.h"
 #include "sysfunc.h"
 
+extern void* shared_addr[3];
+
 int
 sys_fork(void)
 {
@@ -87,4 +89,33 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int
+sys_shmget(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+  if(n<0 || n>2) {
+    return 0;
+  }
+  int flag = 0;
+  for(int i = 0; i < 3; i++) {
+    if(proc->sharePageMap[i] == n) {
+      flag = 1;
+      return 4096*(i+1);
+    }
+  }
+  if(flag == 0) {
+    for(int i = 0; i < 3; i++) {
+      if(proc->sharePageMap[i] == -1) {
+        if(mapsharedpage(i, n) < 0)
+          return -1;
+        proc->sharePageMap[i] = n;
+        return 4096*(i+1);
+      }
+    }
+  }
+  return 1;
 }
