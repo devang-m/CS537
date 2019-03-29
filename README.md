@@ -1,2 +1,2 @@
-# CS537-P3
-CS 537 - Project 3.
+# CS537
+CS 537 - Intro to OS.
