@@ -13,7 +13,7 @@
 #endif
 
 #ifndef NUM_REDUCERS
-    #define NUM_REDUCERS 1
+    #define NUM_REDUCERS 2
 #endif
 
 #ifndef FILE_OUTPUT_SUFFIX
