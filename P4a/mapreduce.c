@@ -12,23 +12,19 @@ struct pairs {
 	char *value;
 };
 
-struct mapperThreadArgs {
-	Mapper m;
-	char *filename;
-};
-
 int curCount = 0;
 struct pairs** partitions;
 int* pairCountInPartition;
 int* pairAllocatedInPartition;
 pthread_mutex_t lock;
 Partitioner p;
+Mapper m;
 int numberPartitions;
 
 // Helper function to be called by pthread_create which calls the mapper function
 void* mapperHelper(void *arg) {
-	struct mapperThreadArgs *t = (struct mapperThreadArgs *)arg;
-	t->m(t->filename);
+	char* filename = (char *)arg;
+	m(filename);
 	return arg;
 }
 
@@ -58,8 +54,8 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	//Initialising all the required variables
 	pthread_t mapperThreads[num_mappers];
 	pthread_mutex_init(&lock, NULL);
-	struct mapperThreadArgs t[num_mappers];
 	p = partition;
+	m = map;
 	numberPartitions = num_reducers;
 	partitions = malloc(num_reducers * sizeof(struct pairs*));
 	pairCountInPartition = malloc(num_reducers * sizeof(int));
@@ -74,9 +70,7 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 
 	// Creating the threads for the number of mappers
 	for (int i = 0; i < num_mappers; i++){
-		t[i].m = map;
-		t[i].filename = argv[i+1];
-	    if(pthread_create(&mapperThreads[i], NULL, mapperHelper, &t[i])) {
+	    if(pthread_create(&mapperThreads[i], NULL, mapperHelper, argv[i+1])) {
 	    	printf("Error\n");
 	    }
 	}
