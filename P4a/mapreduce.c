@@ -1,8 +1,7 @@
 // Code for P4a
 // Free allocated memory
-// Write get_next function
 // Maybe put everything in a struct (global vars)
-// Check for the issue of words with no length
+// If number of files is more than number of mappers
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +16,7 @@ struct pairs {
 struct pairs** partitions;
 int* pairCountInPartition;
 int* pairAllocatedInPartition;
+int* numberOfAccessInPartition;
 pthread_mutex_t lock;
 Partitioner p;
 Reducer r;
@@ -30,10 +30,26 @@ void* mapperHelper(void *arg) {
 	return arg;
 }
 
+char* get_next(char *key, int partition_number) {
+	int num = numberOfAccessInPartition[partition_number];
+	//printf("%s %d\n", partitions[partition_number][num].key,numberOfAccessInPartition[partition_number]);
+	if(num < pairCountInPartition[partition_number] && strcmp(key, partitions[partition_number][num].key) == 0) {
+		numberOfAccessInPartition[partition_number]++;
+		return partitions[partition_number][num].value;
+	}
+	else {
+		return NULL;
+	}
+}
+
 // Helper function to be called by pthread_create which calls the get_next function for each reducer
 void* reducerHelper(void *arg) {
 	int* partitionNumber = (int *)arg;
-	printf("%d\n", *partitionNumber);
+	for(int i = 0; i < pairCountInPartition[*partitionNumber]; i++) {
+		if(i == numberOfAccessInPartition[*partitionNumber]) {
+			r(partitions[*partitionNumber][i].key, get_next, *partitionNumber);
+		}
+	}
 	return arg;
 }
 
@@ -70,6 +86,11 @@ void MR_Emit(char *key, char *value) {
 
 void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce, int num_reducers, Partitioner partition) {
 
+	// If thr number of files is less than number of mappers, then create threads based on number of files
+	if(argc - 1 < num_mappers) {
+		num_mappers = argc - 1;
+	}
+
 	//Initialising all the required variables
 	pthread_t mapperThreads[num_mappers];
 	pthread_t reducerThreads[num_reducers];
@@ -81,6 +102,7 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	partitions = malloc(num_reducers * sizeof(struct pairs*));
 	pairCountInPartition = malloc(num_reducers * sizeof(int));
 	pairAllocatedInPartition = malloc(num_reducers * sizeof(int));
+	numberOfAccessInPartition = malloc(num_reducers * sizeof(int));
 	int arrayPosition[num_reducers];
 
 	// Initialising the arrays needed to store the key value pairs in the partitions
@@ -89,14 +111,15 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 		pairCountInPartition[i] = 0;
 		pairAllocatedInPartition[i] = 1024;
 		arrayPosition[i] = i;
+		numberOfAccessInPartition[i] = 0;
 	}
 
 	// Creating the threads for the number of mappers
-	for (int i = 0; i < num_mappers; i++){
+	for (int i = 0; i < num_mappers; i++) {
 	    if(pthread_create(&mapperThreads[i], NULL, mapperHelper, argv[i+1])) {
 	    	printf("Error\n");
 	    }
-	}
+}
 
 	//Waiting for the threads to finish
 	for(int i = 0; i < num_mappers; i++) {
@@ -109,13 +132,13 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	}
 
 	// Printing to debug
-	for(int i = 0; i < num_reducers; i++) {
-		printf("Reducer number: %d\n", i);
-		for(int j = 0; j < pairCountInPartition[i]; j++) {
-			printf("%s ", (partitions[i][j].key));
-			printf("%s\n", (partitions[i][j].value));
-		}
-	}
+	// for(int i = 0; i < num_reducers; i++) {
+	// 	printf("Reducer number: %d\n", i);
+	// 	for(int j = 0; j < pairCountInPartition[i]; j++) {
+	// 		printf("%s ", (partitions[i][j].key));
+	// 		printf("%s\n", (partitions[i][j].value));
+	// 	}
+	// }
 
 	// Creating the threads for the number of reducers
 	for (int i = 0; i < num_reducers; i++){

@@ -9,11 +9,11 @@
 #include "mapreduce.h"
 
 #ifndef NUM_MAPPERS
-    #define NUM_MAPPERS 2
+    #define NUM_MAPPERS 1
 #endif
 
 #ifndef NUM_REDUCERS
-    #define NUM_REDUCERS 2
+    #define NUM_REDUCERS 1
 #endif
 
 #ifndef FILE_OUTPUT_SUFFIX
