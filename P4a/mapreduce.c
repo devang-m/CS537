@@ -1,5 +1,4 @@
 // Code for P4a
-// Free allocated memory
 // Creation of new thread
 #include <stdio.h>
 #include <stdlib.h>
@@ -190,6 +189,30 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	}
 
 	pthread_mutex_destroy(&lock);
+
+	for(int i = 0; i < num_reducers; i++) {
+		// Freeing the keys and values
+		for(int j = 0; j < pairCountInPartition[i]; j++) {
+			if(partitions[i][j].key != NULL && partitions[i][j].value != NULL) {
+				free(partitions[i][j].key);
+		    	free(partitions[i][j].value);
+			}
+		}
+		// Freeing the pair struct array
+		free(partitions[i]);
+	}
+
+	// Freeing filenames
+	for(int i = 0; i < argc-1; i++) {
+		free(fileNames[i].name);
+	}
+
+	// Freeing memory
+	free(partitions);
+	free(fileNames);
+	free(pairCountInPartition);
+	free(pairAllocatedInPartition);
+	free(numberOfAccessInPartition);
 }
 
 // Given default hash function
