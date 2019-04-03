@@ -1,10 +1,10 @@
 // Code for P4a
 // Free allocated memory
-// Maybe put everything in a struct (global vars)
-// If number of files is more than number of mappers
+// Creation of new thread
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <pthread.h>
 #include "mapreduce.h"
 
@@ -13,7 +13,12 @@ struct pairs {
 	char *value;
 };
 
+struct files {
+	char *name;
+};
+
 struct pairs** partitions;
+struct files* fileNames;
 int* pairCountInPartition;
 int* pairAllocatedInPartition;
 int* numberOfAccessInPartition;
@@ -32,7 +37,6 @@ void* mapperHelper(void *arg) {
 
 char* get_next(char *key, int partition_number) {
 	int num = numberOfAccessInPartition[partition_number];
-	//printf("%s %d\n", partitions[partition_number][num].key,numberOfAccessInPartition[partition_number]);
 	if(num < pairCountInPartition[partition_number] && strcmp(key, partitions[partition_number][num].key) == 0) {
 		numberOfAccessInPartition[partition_number]++;
 		return partitions[partition_number][num].value;
@@ -57,30 +61,39 @@ void* reducerHelper(void *arg) {
 int compare(const void* p1, const void* p2) {
 	struct pairs *pair1 = (struct pairs*) p1;
 	struct pairs *pair2 = (struct pairs*) p2;
-	if (strcmp(pair1->key, pair2->key) == 0) {
+	if(strcmp(pair1->key, pair2->key) == 0) {
 		return strcmp(pair1->value, pair2->value);
 	}
 	return strcmp(pair1->key, pair2->key);
 }
 
+// Sort files by increasing size
+int compareFiles(const void* p1, const void* p2) {
+	struct files *f1 = (struct files*) p1;
+	struct files *f2 = (struct files*) p2;
+	struct stat st1, st2;
+	stat(f1->name, &st1);
+	stat(f2->name, &st2);
+	long int size1 = st1.st_size;
+	long int size2 = st2.st_size;
+	return (size1 - size2);
+}
+
 void MR_Emit(char *key, char *value) {
 	pthread_mutex_lock(&lock); 
-	// Checking to ensure words have a length
-	if(strlen(key)!= 0) {
-		// Getting the partition number
-		unsigned long hashPartitionNumber = p(key, numberPartitions);
-		pairCountInPartition[hashPartitionNumber]++;
-		int curCount = pairCountInPartition[hashPartitionNumber];
-		// Checking if allocated memory has been exceeded,if yes allocating more memory
-		if (curCount > pairAllocatedInPartition[hashPartitionNumber]) {
-			pairAllocatedInPartition[hashPartitionNumber] *= 2;
-			partitions[hashPartitionNumber] = (struct pairs *) realloc(partitions[hashPartitionNumber], pairAllocatedInPartition[hashPartitionNumber] * sizeof(struct pairs));
-		}
-		partitions[hashPartitionNumber][curCount-1].key = (char*)malloc(strlen(key) * sizeof(char));
-		strcpy(partitions[hashPartitionNumber][curCount-1].key, key);
-		partitions[hashPartitionNumber][curCount-1].value = (char*)malloc(strlen(value) * sizeof(char));
-		strcpy(partitions[hashPartitionNumber][curCount-1].value, value);
+	// Getting the partition number
+	unsigned long hashPartitionNumber = p(key, numberPartitions);
+	pairCountInPartition[hashPartitionNumber]++;
+	int curCount = pairCountInPartition[hashPartitionNumber];
+	// Checking if allocated memory has been exceeded,if yes allocating more memory
+	if (curCount > pairAllocatedInPartition[hashPartitionNumber]) {
+		pairAllocatedInPartition[hashPartitionNumber] *= 2;
+		partitions[hashPartitionNumber] = (struct pairs *) realloc(partitions[hashPartitionNumber], pairAllocatedInPartition[hashPartitionNumber] * sizeof(struct pairs));
 	}
+	partitions[hashPartitionNumber][curCount-1].key = (char*)malloc(strlen(key) * sizeof(char));
+	strcpy(partitions[hashPartitionNumber][curCount-1].key, key);
+	partitions[hashPartitionNumber][curCount-1].value = (char*)malloc(strlen(value) * sizeof(char));
+	strcpy(partitions[hashPartitionNumber][curCount-1].value, value);
 	pthread_mutex_unlock(&lock); 
 }
 
@@ -100,10 +113,12 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	r = reduce;
 	numberPartitions = num_reducers;
 	partitions = malloc(num_reducers * sizeof(struct pairs*));
+	fileNames = malloc((argc-1) * sizeof(struct files));
 	pairCountInPartition = malloc(num_reducers * sizeof(int));
 	pairAllocatedInPartition = malloc(num_reducers * sizeof(int));
 	numberOfAccessInPartition = malloc(num_reducers * sizeof(int));
 	int arrayPosition[num_reducers];
+	int filesProcessed = 0;
 
 	// Initialising the arrays needed to store the key value pairs in the partitions
 	for(int i = 0; i < num_reducers; i++) {
@@ -114,16 +129,38 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 		numberOfAccessInPartition[i] = 0;
 	}
 
+	// Copying files for sorting in struct
+	for(int i = 0; i <argc-1; i++) {
+		fileNames[i].name = malloc(strlen(argv[i+1]) * sizeof(char));
+		strcpy(fileNames[i].name, argv[i+1]);
+	}
+
+	// Sorting files as Shortest File first
+	qsort(&fileNames[0], argc-1, sizeof(struct files), compareFiles);
+
 	// Creating the threads for the number of mappers
 	for (int i = 0; i < num_mappers; i++) {
-	    if(pthread_create(&mapperThreads[i], NULL, mapperHelper, argv[i+1])) {
-	    	printf("Error\n");
-	    }
-}
+		pthread_create(&mapperThreads[i], NULL, mapperHelper, fileNames[filesProcessed].name);
+		filesProcessed++;
+	}
 
 	//Waiting for the threads to finish
-	for(int i = 0; i < num_mappers; i++) {
-		pthread_join(mapperThreads[i], NULL); 
+	while(1) {
+		if(filesProcessed != argc-1) {
+			for(int i = 0; i < num_mappers; i++) {
+				if(filesProcessed != argc-1 && pthread_join(mapperThreads[i], NULL) == 0) {
+					pthread_create(&mapperThreads[i], NULL, mapperHelper, fileNames[filesProcessed].name);
+					filesProcessed++;
+				} 
+			}
+		}
+		// All files processed
+		else {
+			for(int i = 0; i < num_mappers; i++) {
+				pthread_join(mapperThreads[i], NULL); 
+			}
+			break;
+		}
 	}
 
 
@@ -131,7 +168,7 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 		qsort(partitions[i], pairCountInPartition[i], sizeof(struct pairs), compare);
 	}
 
-	// Printing to debug
+	//Printing to debug
 	// for(int i = 0; i < num_reducers; i++) {
 	// 	printf("Reducer number: %d\n", i);
 	// 	for(int j = 0; j < pairCountInPartition[i]; j++) {
