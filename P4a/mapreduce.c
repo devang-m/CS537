@@ -1,5 +1,6 @@
 // Code for P4a
-// Creation of new thread
+// Lock in mapper helper?
+// Valgrind
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,16 +22,24 @@ struct files* fileNames;
 int* pairCountInPartition;
 int* pairAllocatedInPartition;
 int* numberOfAccessInPartition;
-pthread_mutex_t lock;
+pthread_mutex_t lock, fileLock;
 Partitioner p;
 Reducer r;
 Mapper m;
 int numberPartitions;
+int filesProcessed;
+int totalFiles;
 
 // Helper function to be called by pthread_create which calls the mapper function
 void* mapperHelper(void *arg) {
-	char* filename = (char *)arg;
-	m(filename);
+	// Possible race condition - Maybe need to use filename = NULL and check?
+	while(filesProcessed < totalFiles) {
+		pthread_mutex_lock(&fileLock);
+		char *filename = fileNames[filesProcessed].name;
+		filesProcessed++;
+		pthread_mutex_unlock(&fileLock);
+		m(filename);
+	}
 	return arg;
 }
 
@@ -107,6 +116,7 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	pthread_t mapperThreads[num_mappers];
 	pthread_t reducerThreads[num_reducers];
 	pthread_mutex_init(&lock, NULL);
+	pthread_mutex_init(&fileLock, NULL);
 	p = partition;
 	m = map;
 	r = reduce;
@@ -116,8 +126,9 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	pairCountInPartition = malloc(num_reducers * sizeof(int));
 	pairAllocatedInPartition = malloc(num_reducers * sizeof(int));
 	numberOfAccessInPartition = malloc(num_reducers * sizeof(int));
+	filesProcessed = 0;
+	totalFiles = argc - 1;
 	int arrayPosition[num_reducers];
-	int filesProcessed = 0;
 
 	// Initialising the arrays needed to store the key value pairs in the partitions
 	for(int i = 0; i < num_reducers; i++) {
@@ -139,30 +150,15 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 
 	// Creating the threads for the number of mappers
 	for (int i = 0; i < num_mappers; i++) {
-		pthread_create(&mapperThreads[i], NULL, mapperHelper, fileNames[filesProcessed].name);
-		filesProcessed++;
+		pthread_create(&mapperThreads[i], NULL, mapperHelper, NULL);
 	}
 
-	//Waiting for the threads to finish
-	while(1) {
-		if(filesProcessed != argc-1) {
-			for(int i = 0; i < num_mappers; i++) {
-				if(filesProcessed != argc-1 && pthread_join(mapperThreads[i], NULL) == 0) {
-					pthread_create(&mapperThreads[i], NULL, mapperHelper, fileNames[filesProcessed].name);
-					filesProcessed++;
-				} 
-			}
-		}
-		// All files processed
-		else {
-			for(int i = 0; i < num_mappers; i++) {
-				pthread_join(mapperThreads[i], NULL); 
-			}
-			break;
-		}
+	// Waiting for threads to finish
+	for(int i = 0; i < num_mappers; i++) {
+		pthread_join(mapperThreads[i], NULL); 
 	}
 
-
+	// Sorting the partitions
 	for(int i = 0; i < num_reducers; i++) {
 		qsort(partitions[i], pairCountInPartition[i], sizeof(struct pairs), compare);
 	}
@@ -189,6 +185,7 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 	}
 
 	pthread_mutex_destroy(&lock);
+	pthread_mutex_destroy(&fileLock);
 
 	for(int i = 0; i < num_reducers; i++) {
 		// Freeing the keys and values
