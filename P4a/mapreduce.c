@@ -1,6 +1,5 @@
 // Code for P4a
-// Lock in mapper helper?
-// Valgrind
+// Valgrind/Helgrind for locks
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,13 +31,16 @@ int totalFiles;
 
 // Helper function to be called by pthread_create which calls the mapper function
 void* mapperHelper(void *arg) {
-	// Possible race condition - Maybe need to use filename = NULL and check?
 	while(filesProcessed < totalFiles) {
 		pthread_mutex_lock(&fileLock);
-		char *filename = fileNames[filesProcessed].name;
-		filesProcessed++;
+		char *filename = NULL;
+		if(filesProcessed < totalFiles) {
+			filename = fileNames[filesProcessed].name;
+			filesProcessed++;
+		}
 		pthread_mutex_unlock(&fileLock);
-		m(filename);
+		if(filename != NULL)
+			m(filename);
 	}
 	return arg;
 }
@@ -98,9 +100,9 @@ void MR_Emit(char *key, char *value) {
 		pairAllocatedInPartition[hashPartitionNumber] *= 2;
 		partitions[hashPartitionNumber] = (struct pairs *) realloc(partitions[hashPartitionNumber], pairAllocatedInPartition[hashPartitionNumber] * sizeof(struct pairs));
 	}
-	partitions[hashPartitionNumber][curCount-1].key = (char*)malloc(strlen(key) * sizeof(char));
+	partitions[hashPartitionNumber][curCount-1].key = (char*)malloc((strlen(key)+1) * sizeof(char));
 	strcpy(partitions[hashPartitionNumber][curCount-1].key, key);
-	partitions[hashPartitionNumber][curCount-1].value = (char*)malloc(strlen(value) * sizeof(char));
+	partitions[hashPartitionNumber][curCount-1].value = (char*)malloc((strlen(value)+1) * sizeof(char));
 	strcpy(partitions[hashPartitionNumber][curCount-1].value, value);
 	pthread_mutex_unlock(&lock); 
 }
@@ -141,7 +143,7 @@ void MR_Run(int argc, char *argv[], Mapper map, int num_mappers, Reducer reduce,
 
 	// Copying files for sorting in struct
 	for(int i = 0; i <argc-1; i++) {
-		fileNames[i].name = malloc(strlen(argv[i+1]) * sizeof(char));
+		fileNames[i].name = malloc((strlen(argv[i+1])+1) * sizeof(char));
 		strcpy(fileNames[i].name, argv[i+1]);
 	}
 
