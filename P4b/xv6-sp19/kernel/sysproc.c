@@ -103,8 +103,12 @@ sys_clone(void)
     return -1;
   if(argptr(3, (void *)&stack, PGSIZE) < 0)
     return -1;
-  cprintf("%d %d %d %d\n", func, arg1, arg2, stack);
-  return 1;
+
+  cprintf("%d\n", stack);
+  // Checking for page alignment
+  if((uint)stack % PGSIZE != 0)
+    return -1;
+  return clone(func, arg1, arg2, stack);
 }
 
 int
@@ -113,6 +117,5 @@ sys_join(void)
   void **stackPointer = NULL;
   if(argptr(0, (void*)&stackPointer, sizeof(void *)) < 0)
     return -1;
-  cprintf("Sysjoin works");
-  return 1;
+  return join(stackPointer);
 }

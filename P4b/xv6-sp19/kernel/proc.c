@@ -159,6 +159,49 @@ fork(void)
   return pid;
 }
 
+// Create a new process copying p as the parent.
+// Sets up stack to return as if from system call.
+// Caller must set state of returned proc to RUNNABLE.
+int
+clone(void(*func) (void *, void *), void* arg1, void* arg2, void* stack)
+{
+  int i, pid;
+  struct proc *np;
+  char *stackAddr;
+  // Allocate process.
+  if((np = allocproc()) == 0)
+    return -1;
+  cprintf("%d: PID of child\n", np->pid);
+  np->pgdir = proc->pgdir;
+
+  np->sz = proc->sz;
+  np->parent = proc;
+  *np->tf = *proc->tf;
+
+  // Clear %eax so that fork returns 0 in the child.
+  np->tf->eax = 0;
+  np->tf->eip = (int)func;
+  np->tf->ebp = 0;
+  np->stack = stack;
+
+  np->tf->esp = (int)(stack) + PGSIZE - 12;
+  stackAddr = uva2ka(np->pgdir, (char*)stack);
+
+  *(void **)(stackAddr + PGSIZE -12) = (void*)0xffffffff;
+  *(void **)(stackAddr + PGSIZE -8) = (void*)arg1;
+  *(void **)(stackAddr + PGSIZE -4) = (void*)arg2;
+
+  for(i = 0; i < NOFILE; i++)
+    if(proc->ofile[i])
+      np->ofile[i] = filedup(proc->ofile[i]);
+  np->cwd = idup(proc->cwd);
+ 
+  pid = np->pid;
+  np->state = RUNNABLE;
+  safestrcpy(np->name, proc->name, sizeof(proc->name));
+  return pid;
+}
+
 // Exit the current process.  Does not return.
 // An exited process remains in the zombie state
 // until its parent calls wait() to find out it exited.
@@ -200,6 +243,47 @@ exit(void)
   proc->state = ZOMBIE;
   sched();
   panic("zombie exit");
+}
+
+int
+join(void **stackPointer)
+{
+  struct proc *p;
+  int threadsExist, pid;
+
+  acquire(&ptable.lock);
+  for(;;){
+    // Scan through table looking for zombie threads.
+    threadsExist = 0;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(proc->pgdir != p->pgdir || proc->pid == p->pid)
+        continue;
+      threadsExist = 1;
+      if(p->state == ZOMBIE){
+        // Found one.
+        pid = p->pid;
+        kfree(p->kstack);
+        p->kstack = 0;
+        p->state = UNUSED;
+        p->pid = 0;
+        p->parent = 0;
+        p->name[0] = 0;
+        p->killed = 0;
+        *stackPointer = p->stack;
+        release(&ptable.lock);
+        return pid;
+      }
+    }
+
+    // No point waiting if we don't have any threads.
+    if(!threadsExist || proc->killed){
+      release(&ptable.lock);
+      return -1;
+    }
+
+    // Wait for children to exit.  (See wakeup1 call in proc_exit.)
+    sleep(proc, &ptable.lock);  //DOC: wait-sleep
+  }
 }
 
 // Wait for a child process to exit and return its pid.
@@ -391,7 +475,7 @@ int
 kill(int pid)
 {
   struct proc *p;
-
+  cprintf("%d: PID to kill\n", pid);
   acquire(&ptable.lock);
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){
