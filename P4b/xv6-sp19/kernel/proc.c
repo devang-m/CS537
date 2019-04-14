@@ -171,7 +171,6 @@ clone(void(*func) (void *, void *), void* arg1, void* arg2, void* stack)
   // Allocate process.
   if((np = allocproc()) == 0)
     return -1;
-  cprintf("%d: PID of child\n", np->pid);
   np->pgdir = proc->pgdir;
 
   np->sz = proc->sz;
@@ -291,8 +290,8 @@ join(void **stackPointer)
 int
 wait(void)
 {
-  struct proc *p;
-  int havekids, pid;
+  struct proc *p, *p1;
+  int havekids, pid, flag;
 
   acquire(&ptable.lock);
   for(;;){
@@ -301,6 +300,16 @@ wait(void)
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->parent != proc)
         continue;
+      // Checking if child process still has some shared address space
+      flag = 0;
+    	for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
+    		if(p1->pgdir == p->pgdir && p1->pid != p->pid) {
+        	flag = 1;
+        	break;
+    		}
+    	}
+    	if (flag == 1)
+    		continue;
       havekids = 1;
       if(p->state == ZOMBIE){
         // Found one.
@@ -475,7 +484,6 @@ int
 kill(int pid)
 {
   struct proc *p;
-  cprintf("%d: PID to kill\n", pid);
   acquire(&ptable.lock);
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){

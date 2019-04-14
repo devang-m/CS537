@@ -104,7 +104,6 @@ sys_clone(void)
   if(argptr(3, (void *)&stack, PGSIZE) < 0)
     return -1;
 
-  cprintf("%d\n", stack);
   // Checking for page alignment
   if((uint)stack % PGSIZE != 0)
     return -1;

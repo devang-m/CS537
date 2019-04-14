@@ -8,28 +8,7 @@ build xv6 using make
 **********************************************************************
 Trying to build project using make
 make
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG kernel/sysproc.c -MF kernel/sysproc.d -MT kernel/sysproc.d -MT kernel/sysproc.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
-	-M -MG kernel/proc.c -MF kernel/proc.d -MT kernel/proc.d -MT kernel/proc.o
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o kernel/proc.o kernel/proc.c
-gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o kernel/sysproc.o kernel/sysproc.c
-ld  -m    elf_i386 -nostdlib --omagic \
-	--section-start=.text=0x100000 --entry=main --output=kernel/kernel \
-	kernel/multiboot.o kernel/data.o kernel/bio.o kernel/console.o kernel/exec.o kernel/file.o kernel/fs.o kernel/ide.o kernel/ioapic.o kernel/kalloc.o kernel/kbd.o kernel/lapic.o kernel/main.o kernel/mp.o kernel/picirq.o kernel/pipe.o kernel/proc.o kernel/spinlock.o kernel/string.o kernel/swtch.o kernel/syscall.o kernel/sysfile.o kernel/sysproc.o kernel/timer.o kernel/trapasm.o kernel/trap.o kernel/uart.o kernel/vectors.o kernel/vm.o \
-	-b binary initcode bootother
-dd if=/dev/zero of=xv6.img count=10000
-10000+0 records in
-10000+0 records out
-5120000 bytes (5.1 MB, 4.9 MiB) copied, 0.0178033 s, 288 MB/s
-dd if=kernel/bootblock of=xv6.img conv=notrunc
-1+0 records in
-1+0 records out
-512 bytes copied, 5.922e-05 s, 8.6 MB/s
-dd if=kernel/kernel of=xv6.img seek=1 conv=notrunc
-257+1 records in
-257+1 records out
-131740 bytes (132 kB, 129 KiB) copied, 0.000399845 s, 329 MB/s
+make: Nothing to be done for 'all'.
 
 
 test build PASSED
@@ -53,25 +32,25 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-ls
 rm
 kill
-forktest
 mkdir
-tester
-init
-cat
-echo
-README
-wc
-sh
-clone_basic
-zombie
-stressfs
 usertests
+ls
+stressfs
+sh
 grep
+zombie
+cat
+init
+wc
+forktest
 ln
-balloc: first 431 blocks have been allocated
+echo
+clone_basic
+README
+tester
+balloc: first 480 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox 
@@ -90,8 +69,6 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-12288
-4: PID of child
 PASSED TEST!
 
 
@@ -116,25 +93,25 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-ls
 rm
 kill
-forktest
 mkdir
-tester
-init
-cat
-echo
-README
-wc
-sh
-clone_basic
-zombie
-stressfs
 usertests
+ls
+stressfs
+sh
 grep
+zombie
+cat
+init
+wc
+forktest
 ln
-balloc: first 433 blocks have been allocated
+echo
+clone_basic
+README
+tester
+balloc: first 483 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox 
@@ -153,9 +130,6 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-12288
-4: PID of child
-4: PID to kill
 PASSED TEST!
 
 
@@ -180,25 +154,25 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-ls
 rm
 kill
-forktest
 mkdir
-tester
-init
-cat
-echo
-README
-wc
-sh
-clone_basic
-zombie
-stressfs
 usertests
+ls
+stressfs
+sh
 grep
+zombie
+cat
+init
+wc
+forktest
 ln
-balloc: first 434 blocks have been allocated
+echo
+clone_basic
+README
+tester
+balloc: first 483 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox 
@@ -217,10 +191,6 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-12287
-12288
-4: PID of child
-4: PID to kill
 PASSED TEST!
 
 
@@ -245,25 +215,25 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-ls
 rm
 kill
-forktest
 mkdir
-tester
-init
-cat
-echo
-README
-wc
-sh
-clone_basic
-zombie
-stressfs
 usertests
+ls
+stressfs
+sh
 grep
+zombie
+cat
+init
+wc
+forktest
 ln
-balloc: first 432 blocks have been allocated
+echo
+clone_basic
+README
+tester
+balloc: first 481 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox 
@@ -282,13 +252,268 @@ cpu0: starting
 init: starting sh
 $ tester
 tester
-12288
-4: PID of child
+PASSED TEST!
 
 
-test clone_wait FAILED (0 of 10)
+test clone_wait PASSED (10 of 10)
  (after clone(), wait() should not succeed)
- Timelimit (10.0s) exceeded
 
-Skipped 5 tests.
+starting fork_join
+
+**********************************************************************
+
+Test fork_join
+after fork(), join() should not succeed
+
+**********************************************************************
+Running xv6 user progam /p/course/cs537-shivaram/tests/p4b//ctests/fork_join.c
+Trying to build project using make
+make
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
+	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+rm
+kill
+mkdir
+usertests
+ls
+stressfs
+sh
+grep
+zombie
+cat
+init
+wc
+forktest
+ln
+echo
+clone_basic
+README
+tester
+balloc: first 478 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox 
+Ctrl+a h for help
+/p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 2
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+xv6...
+lapicinit: 1 0xfee00000
+cpu1: starting
+cpu0: starting
+init: starting sh
+$ tester
+tester
+PASSED TEST!
+
+
+test fork_join PASSED (10 of 10)
+ (after fork(), join() should not succeed)
+
+starting threads_basic
+
+**********************************************************************
+
+Test threads_basic
+basic tests for thread_create() and thread_join()
+
+**********************************************************************
+Running xv6 user progam /p/course/cs537-shivaram/tests/p4b//ctests/threads_basic.c
+Trying to build project using make
+make
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
+	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+rm
+kill
+mkdir
+usertests
+ls
+stressfs
+sh
+grep
+zombie
+cat
+init
+wc
+forktest
+ln
+echo
+clone_basic
+README
+tester
+balloc: first 482 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox 
+Ctrl+a h for help
+/p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 2
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+xv6...
+lapicinit: 1 0xfee00000
+cpu1: starting
+cpu0: starting
+init: starting sh
+$ tester
+tester
+PASSED TEST!
+
+
+test threads_basic PASSED (10 of 10)
+ (basic tests for thread_create() and thread_join())
+
+starting threads_many
+
+**********************************************************************
+
+Test threads_many
+create and join many threads
+
+**********************************************************************
+Running xv6 user progam /p/course/cs537-shivaram/tests/p4b//ctests/threads_many.c
+Trying to build project using make
+make
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
+	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+rm
+kill
+mkdir
+usertests
+ls
+stressfs
+sh
+grep
+zombie
+cat
+init
+wc
+forktest
+ln
+echo
+clone_basic
+README
+tester
+balloc: first 486 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox 
+Ctrl+a h for help
+/p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 2
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+xv6...
+lapicinit: 1 0xfee00000
+cpu1: starting
+cpu0: starting
+init: starting sh
+$ tester
+tester
+Creating child threads...
+Created 57 child threads
+Joining all 57 child threads...
+All 57 child threads joined
+Creating child threads...
+Created 61 child threads
+Joining all 61 child threads...
+All 61 child threads joined
+Creating and joining 10000 child threads...
+Forking and joining 100 child processes...
+PASSED TEST!
+
+
+test threads_many PASSED (10 of 10)
+ (create and join many threads)
+
+starting threads_sbrk
+
+**********************************************************************
+
+Test threads_sbrk
+test to make sure threads handle sbrk() correctly
+
+**********************************************************************
+Running xv6 user progam /p/course/cs537-shivaram/tests/p4b//ctests/threads_sbrk.c
+Trying to build project using make
+make
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
+	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
+gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+rm
+kill
+mkdir
+usertests
+ls
+stressfs
+sh
+grep
+zombie
+cat
+init
+wc
+forktest
+ln
+echo
+clone_basic
+README
+tester
+balloc: first 489 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox 
+Ctrl+a h for help
+/p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 2
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+xv6...
+lapicinit: 1 0xfee00000
+cpu1: starting
+cpu0: starting
+init: starting sh
+$ tester
+tester
+Creating 1 thread to call sbrk() once...
+user/tester.c:93 check (addr == (char *)stack1 + 2*PGSIZE) failed: sbrk() failed
+TEST FAILED
+
+
+test threads_sbrk FAILED (0 of 10)
+ (test to make sure threads handle sbrk() correctly)
+ tester failed
+
+Skipped 1 tests.
 To keep testing after failing a test, use flag '-c' or '--continue'

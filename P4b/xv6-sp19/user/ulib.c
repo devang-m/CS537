@@ -4,6 +4,10 @@
 #include "user.h"
 #include "x86.h"
 
+#define PGSIZE 0x1000
+void* userStackAddress[64];
+int valueInArray[64];
+
 char*
 strcpy(char *s, char *t)
 {
@@ -102,4 +106,51 @@ memmove(void *vdst, void *vsrc, int n)
   while(n-- > 0)
     *dst++ = *src++;
   return vdst;
+}
+
+int 
+thread_create(void (*start_routine)(void *, void *), void *arg1, void *arg2)
+{
+  void* stackAddr, *stackPassed;
+  stackAddr = malloc(2*PGSIZE);
+  // malloc did not work
+  if(stackAddr == 0) {
+    return -1;
+  }
+  //To make the stack page aligned
+  int extraSpace = ((int)(stackAddr))%PGSIZE;
+  stackPassed = (stackAddr) + PGSIZE - extraSpace;
+  int childPid = clone(start_routine, arg1, arg2, stackPassed);
+  if (childPid != -1) {
+    for(int i=0; i<64; i++ ) {
+      if(userStackAddress[i] == NULL) {
+        userStackAddress[i] = stackAddr;
+        valueInArray[i] = childPid;
+        break;
+      }
+    }
+  }
+  else {
+    free(stackAddr);
+  }
+  return childPid;
+}
+
+int
+thread_join()
+{
+  void *stack;
+  int childPid;
+  //Need to free stack
+  childPid = join(&stack);
+  if (childPid != -1) {
+    for(int i=0; i<64; i++) {
+      if(valueInArray[i] == childPid) {
+        free(userStackAddress[i]);
+        valueInArray[i] = -1;
+        userStackAddress[i] = NULL;
+      }
+    }
+  }
+  return childPid;
 }
