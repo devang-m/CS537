@@ -106,17 +106,29 @@ userinit(void)
 int
 growproc(int n)
 {
+	acquire(&ptable.lock);
   uint sz;
-  
+  struct proc *p;
   sz = proc->sz;
   if(n > 0){
-    if((sz = allocuvm(proc->pgdir, sz, sz + n)) == 0)
+    if((sz = allocuvm(proc->pgdir, sz, sz + n)) == 0) {
+    	release(&ptable.lock);
       return -1;
+    }
   } else if(n < 0){
-    if((sz = deallocuvm(proc->pgdir, sz, sz + n)) == 0)
+    if((sz = deallocuvm(proc->pgdir, sz, sz + n)) == 0) {
+    	release(&ptable.lock);
       return -1;
+    }
   }
   proc->sz = sz;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if(proc->pgdir == p->pgdir) {
+    	p->sz = sz;
+    }
+	}
+	release(&ptable.lock);
   switchuvm(proc);
   return 0;
 }
