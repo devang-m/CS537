@@ -154,3 +154,17 @@ thread_join()
   }
   return childPid;
 }
+
+void lock_init(lock_t *lock) {
+  lock->ticket = 0;
+  lock->turn = 0;
+}
+
+void lock_acquire(lock_t *lock) {
+  int myturn = xchg(&lock->ticket, lock->ticket + 1);
+  while (lock->turn != myturn);
+}
+
+void lock_release(lock_t *lock) {
+  xchg(&lock->turn, lock->turn + 1);
+}
