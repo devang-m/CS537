@@ -161,10 +161,10 @@ void lock_init(lock_t *lock) {
 }
 
 void lock_acquire(lock_t *lock) {
-  int myturn = xchg(&lock->ticket, lock->ticket + 1);
+  int myturn = fadd(&lock->ticket, 1);
   while (lock->turn != myturn);
 }
 
 void lock_release(lock_t *lock) {
-  xchg(&lock->turn, lock->turn + 1);
+  fadd(&lock->turn, 1);
 }
