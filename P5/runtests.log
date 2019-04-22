@@ -1,0 +1,94 @@
+starting build
+
+**********************************************************************
+
+Test build
+build project using make
+
+**********************************************************************
+Trying to clean project using make clean
+make clean
+make: *** No rule to make target 'clean'.  Stop.
+Trying to build project using make
+make
+make: *** No targets specified and no makefile found.  Stop.
+gcc xcheck.c -o xcheck
+
+
+test build PASSED
+ (build project using make)
+
+starting Good
+
+**********************************************************************
+
+Test Good
+run on a good filesystem
+
+**********************************************************************
+/tmp/tmpwmAsBm/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Good
+
+
+test Good PASSED (5 of 5)
+ (run on a good filesystem)
+
+starting Goodrefcnt
+
+**********************************************************************
+
+Test Goodrefcnt
+run on fs with only good reference counts
+
+**********************************************************************
+/tmp/tmpwmAsBm/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrefcnt
+
+
+test Goodrefcnt PASSED (2 of 2)
+ (run on fs with only good reference counts)
+
+starting Nonexistant
+
+**********************************************************************
+
+Test Nonexistant
+run on a nonexistant filesystem
+
+**********************************************************************
+/tmp/tmpwmAsBm/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Nonexistant
+
+
+test Nonexistant PASSED (2 of 2)
+ (run on a nonexistant filesystem)
+
+starting Badroot
+
+**********************************************************************
+
+Test Badroot
+run on a filesystem with a root directory in bad location
+
+**********************************************************************
+/tmp/tmpwmAsBm/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot
+
+
+test Badroot PASSED (5 of 5)
+ (run on a filesystem with a root directory in bad location)
+
+starting Badinode
+
+**********************************************************************
+
+Test Badinode
+run on a filesystem with a bad type in an inode
+
+**********************************************************************
+/tmp/tmpwmAsBm/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badinode
+Failure: ./xcheck returned incorrect status code. Expected 1 got 0
+
+
+test Badinode FAILED (0 of 5)
+ (run on a filesystem with a bad type in an inode)
+ ./xcheck returned incorrect status code. Expected 1 got 0
+
+Skipped 13 tests.
+To keep testing after failing a test, use flag '-c' or '--continue'
