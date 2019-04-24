@@ -26,7 +26,7 @@ Test Good
 run on a good filesystem
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Good
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Good
 
 
 test Good PASSED (5 of 5)
@@ -40,7 +40,7 @@ Test Goodrefcnt
 run on fs with only good reference counts
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrefcnt
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrefcnt
 
 
 test Goodrefcnt PASSED (2 of 2)
@@ -54,7 +54,7 @@ Test Nonexistant
 run on a nonexistant filesystem
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Nonexistant
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Nonexistant
 
 
 test Nonexistant PASSED (2 of 2)
@@ -68,7 +68,7 @@ Test Badroot
 run on a filesystem with a root directory in bad location
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot
 
 
 test Badroot PASSED (5 of 5)
@@ -82,7 +82,7 @@ Test Badinode
 run on a filesystem with a bad type in an inode
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badinode
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badinode
 
 
 test Badinode PASSED (5 of 5)
@@ -96,7 +96,7 @@ Test Badaddr
 run on a filesystem with a bad direct address in an inode
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badaddr
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badaddr
 
 
 test Badaddr PASSED (5 of 5)
@@ -110,7 +110,7 @@ Test Badindir1
 run on a filesystem with a bad indirect address in an inode
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badindir1
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badindir1
 
 
 test Badindir1 PASSED (5 of 5)
@@ -124,7 +124,7 @@ Test Badroot2
 run on a filesystem with a bad root directory in good location
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot2
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot2
 
 
 test Badroot2 PASSED (5 of 5)
@@ -138,7 +138,7 @@ Test Badfmt
 run on a filesystem without . or .. directories
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badfmt
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badfmt
 
 
 test Badfmt PASSED (5 of 5)
@@ -152,13 +152,11 @@ Test Mrkfree
 run on a filesystem with an inuse direct block marked free
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkfree
-Failure: ./xcheck returned incorrect status code. Expected 1 got 0
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkfree
 
 
-test Mrkfree FAILED (0 of 5)
+test Mrkfree PASSED (5 of 5)
  (run on a filesystem with an inuse direct block marked free)
- ./xcheck returned incorrect status code. Expected 1 got 0
 
 starting Mrkused
 
@@ -168,13 +166,11 @@ Test Mrkused
 run on a filesystem with a free block marked used
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkused
-Failure: ./xcheck returned incorrect status code. Expected 1 got 0
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkused
 
 
-test Mrkused FAILED (0 of 5)
+test Mrkused PASSED (5 of 5)
  (run on a filesystem with a free block marked used)
- ./xcheck returned incorrect status code. Expected 1 got 0
 
 starting Addronce
 
@@ -184,13 +180,11 @@ Test Addronce
 run on a filesystem with an address used more than once
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Addronce
-Failure: ./xcheck returned incorrect status code. Expected 1 got 0
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Addronce
 
 
-test Addronce FAILED (0 of 5)
+test Addronce PASSED (5 of 5)
  (run on a filesystem with an address used more than once)
- ./xcheck returned incorrect status code. Expected 1 got 0
 
 starting Imrkused
 
@@ -200,7 +194,7 @@ Test Imrkused
 run with inode marked used, but not referenced in a directory
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkused
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkused
 Failure: ./xcheck returned incorrect status code. Expected 1 got 0
 
 
@@ -216,7 +210,7 @@ Test Imrkfree
 run with inode marked free, but referenced in a directory
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkfree
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkfree
 Failure: ./xcheck returned incorrect status code. Expected 1 got 0
 
 
@@ -232,7 +226,7 @@ Test Badrefcnt
 run on fs which has an inode with a bad reference count
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badrefcnt
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badrefcnt
 Failure: ./xcheck returned incorrect status code. Expected 1 got 0
 
 
@@ -248,7 +242,7 @@ Test Dironce
 run on fs with a directory appearing more than once
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Dironce
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Dironce
 Failure: ./xcheck returned incorrect status code. Expected 1 got 0
 
 
@@ -264,7 +258,7 @@ Test Goodrm
 run on good fs with a file removed and a new directory created
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrm
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrm
 
 
 test Goodrm PASSED (5 of 5)
@@ -278,7 +272,7 @@ Test Goodlink
 run on good fs with some hard links and a linked file removed
 
 **********************************************************************
-/tmp/tmp9o9n9D/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodlink
+/tmp/tmpE92v3J/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodlink
 
 
 test Goodlink PASSED (3 of 3)
@@ -316,17 +310,14 @@ test Badroot2 PASSED (5 of 5)
 test Badfmt PASSED (5 of 5)
  (run on a filesystem without . or .. directories)
 
-test Mrkfree FAILED (0 of 5)
+test Mrkfree PASSED (5 of 5)
  (run on a filesystem with an inuse direct block marked free)
- ./xcheck returned incorrect status code. Expected 1 got 0
 
-test Mrkused FAILED (0 of 5)
+test Mrkused PASSED (5 of 5)
  (run on a filesystem with a free block marked used)
- ./xcheck returned incorrect status code. Expected 1 got 0
 
-test Addronce FAILED (0 of 5)
+test Addronce PASSED (5 of 5)
  (run on a filesystem with an address used more than once)
- ./xcheck returned incorrect status code. Expected 1 got 0
 
 test Imrkused FAILED (0 of 5)
  (run with inode marked used, but not referenced in a directory)
@@ -350,6 +341,6 @@ test Goodrm PASSED (5 of 5)
 test Goodlink PASSED (3 of 3)
  (run on good fs with some hard links and a linked file removed)
 
-Passed 12 of 19 tests.
-Overall 12 of 19
-Points 47 of 82
+Passed 15 of 19 tests.
+Overall 15 of 19
+Points 62 of 82
