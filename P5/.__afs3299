@@ -54,9 +54,6 @@ int main(int argc, char *argv[]) {
     int blocks_in_use[sb->size];
     memset(blocks_in_use, 0, (sb->size)*sizeof(blocks_in_use[0]));
 
-    int inodes_in_use[sb->ninodes];
-    memset(inodes_in_use, 0, (sb->ninodes)*sizeof(inodes_in_use[0]));
-
     struct dinode *dip = (struct dinode *) (img_ptr + 2 * BSIZE);
 
     for (int i=0; i < sb->ninodes; i++) {
@@ -130,18 +127,11 @@ int main(int argc, char *argv[]) {
     //Ensure that proper formatting of directory is checked before root directory check.
     //Check for root directory, are . and .. at first two entries in the directory and root in 1
     uint data_block_addr = dip[1].addrs[0];
-    if (dip[1].type == 1) {
-    	struct xv6_dirent *entry = (struct xv6_dirent *)(img_ptr + data_block_addr * BSIZE);
-    	if (entry[0].inum != 1 || entry[1].inum != 1) {
+    struct xv6_dirent *entry = (struct xv6_dirent *)(img_ptr + data_block_addr * BSIZE);
+    if (entry[0].inum != 1 || entry[1].inum != 1) {
     	fprintf(stderr, "%s", "ERROR: root directory does not exist.\n");
     	exit(1);
-        } 
     }
-    //Root directory in bad location (not at inode 1)
-    else {
-		fprintf(stderr, "%s", "ERROR: root directory does not exist.\n");
-		exit(1);
-	} 
 
     // Do we need to round up
     char* bitmap_start = (char *) (img_ptr + 3*BSIZE + ((sb->ninodes/IPB)*BSIZE));
@@ -190,57 +180,6 @@ int main(int argc, char *argv[]) {
     	}
     }
 
-	//Tests 9, 10.pre preocessing
-	// What if some entry in a directory ointing to inode 0, is the file inconsistent?
-	// That is why we are starting from 1 in the loops below
-    for (int i = 0; i < sb->ninodes; i++) {
-    	if (dip[i].type == 1) {
-    		for (int x=0; x < NDIRECT; x++) {
-    			if(dip[i].addrs[x] == 0)
-    				continue;
-	        	struct xv6_dirent *entry = (struct xv6_dirent *)(img_ptr + dip[i].addrs[x] * BSIZE);
-				for (int j=0; j<(BSIZE/sizeof(struct xv6_dirent)); j++) {
-	        		inodes_in_use[entry[j].inum] += 1;
-	        	}
-	        }
-	        uint* indirect = (uint*) (img_ptr + BSIZE * dip[i].addrs[NDIRECT]);
-	        for (int x=0; x < NINDIRECT; x++) {
-	        	if(indirect[x] == 0)
-    				continue;
-	        	struct xv6_dirent *entry = (struct xv6_dirent *)(img_ptr + indirect[x] * BSIZE);
-				for (int j=0; j<(BSIZE/sizeof(struct xv6_dirent)); j++) {
-	        		inodes_in_use[entry[j].inum] += 1;
-	        	}
-	        }
-        }
-	}
-	// test 9
-	for(int i = 1; i < sb->ninodes; i++) {
-		if(dip[i].type > 0 && dip[i].type <= 3) {
-			if(inodes_in_use[i] == 0) {
-				fprintf(stderr, "%s", "ERROR: inode marked use but not found in a directory.\n");
-    	    	exit(1);
-			}
-		}
-	}
-	// test 10
-	for(int i = 1; i < sb->ninodes; i++) {
-		if(inodes_in_use[i] != 0) {
-			if(dip[i].type == 0) {
-				fprintf(stderr, "%s", "ERROR: inode referred to in directory but marked free.\n");
-    	    	exit(1);
-			}
-		}
-	}
-	// test 11
-	for(int i = 1; i < sb->ninodes; i++) {
-		if(dip[i].type == 2) {
-			if(inodes_in_use[i] != dip[i].nlink) {
-				fprintf(stderr, "%s", "ERROR: bad reference count for file.\n");
-    	    	exit(1);
-			}
-		}
-	}
 
 }
 
