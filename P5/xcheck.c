@@ -10,8 +10,8 @@
 #include <stdbool.h>
 #include <sys/mman.h>
 
-#define stat xv6_stat  // avoid clash with host struct stat
-#define dirent xv6_dirent  // avoid clash with host struct stat
+#define stat xv6_stat
+#define dirent xv6_dirent
 #include "types.h"
 #include "fs.h"
 #undef stat
@@ -49,13 +49,15 @@ int main(int argc, char *argv[]) {
     }
 
     struct superblock *sb = (struct superblock *) (img_ptr + BSIZE);
-    //printf("size %d nblocks %d ninodes %d\n", sb->size, sb->nblocks, sb->ninodes);
 
     int blocks_in_use[sb->size];
     memset(blocks_in_use, 0, (sb->size)*sizeof(blocks_in_use[0]));
 
     int inodes_in_use[sb->ninodes];
     memset(inodes_in_use, 0, (sb->ninodes)*sizeof(inodes_in_use[0]));
+
+    int dir_ref[sb->ninodes];
+    memset(dir_ref, 0, (sb->ninodes)*sizeof(dir_ref[0]));
 
     struct dinode *dip = (struct dinode *) (img_ptr + 2 * BSIZE);
 
@@ -113,8 +115,6 @@ int main(int argc, char *argv[]) {
     	}
     }	
 
-    //print_inode(dip[0]);
-
     // Do we need to check for T_DEV as well?
     // Checking if dir is properly formatted
     for (int i=0; i < sb->ninodes; i++) {
@@ -127,8 +127,8 @@ int main(int argc, char *argv[]) {
     	}
     }
 
-    //Ensure that proper formatting of directory is checked before root directory check.
-    //Check for root directory, are . and .. at first two entries in the directory and root in 1
+    // Ensure that proper formatting of directory is checked before root directory check.
+    // Check for root directory, are . and .. at first two entries in the directory and root in 1
     uint data_block_addr = dip[1].addrs[0];
     if (dip[1].type == 1) {
     	struct xv6_dirent *entry = (struct xv6_dirent *)(img_ptr + data_block_addr * BSIZE);
@@ -143,9 +143,7 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	} 
 
-    // Do we need to round up
     char* bitmap_start = (char *) (img_ptr + 3*BSIZE + ((sb->ninodes/IPB)*BSIZE));
-    //printf("%ud %ud\n", &(*bitmap_start),  &(*img_ptr));
     for (int i = 0; i < sb->ninodes; i++) {
     	if (dip[i].type > 0 && dip[i].type <= 3){
     		for(int j = 0; j < NDIRECT+1; j++) {
@@ -155,14 +153,12 @@ int main(int argc, char *argv[]) {
     			uint bitmap_array_pos = (dip[i].addrs[j])/8;
     			uint bit_position_within_byte = (dip[i].addrs[j])%8;
     			if(((bitmap_start[bitmap_array_pos] >> bit_position_within_byte) & 1) == 0) {
-    				//printf("%d %d\n", i. j);
     				fprintf(stderr, "%s", "ERROR: address used by inode but marked free in bitmap.\n");
     	    		exit(1);
     			}
     		}
     		uint* indirect = (uint*) (img_ptr + BSIZE * dip[i].addrs[NDIRECT]);
     	    for (int x = 0; x < NINDIRECT; x++) {
-    	    	//uint bit = BBLOCK(dip[i].addrs[x], sb->inodes);
     	    	uint indirect_addr = indirect[x];
     	    	if(indirect_addr == 0) {
     				continue;
@@ -173,7 +169,6 @@ int main(int argc, char *argv[]) {
     				fprintf(stderr, "%s", "ERROR: address used by inode but marked free in bitmap.\n");
     	    		exit(1);
     			}
-    	    	//char* bitmap_block_address = (char*)(bitmap_block * BSIZE + img_ptr); 
     	    }
     	}
     }
@@ -181,7 +176,6 @@ int main(int argc, char *argv[]) {
     for (int i=0; i<sb->nblocks; i++) {
     	uint bitmap_array_pos = (i+data_block_start_number)/8;
     	uint bit_position_within_byte = (i+data_block_start_number)%8;
-    	//int bound = sb->size
     	if(((bitmap_start[bitmap_array_pos] >> bit_position_within_byte) & 1) == 1) {
     		if(blocks_in_use[i+data_block_start_number]!=1) {
     			fprintf(stderr, "%s", "ERROR: bitmap marks block in use but it is not in use.\n");
@@ -190,7 +184,7 @@ int main(int argc, char *argv[]) {
     	}
     }
 
-	//Tests 9, 10.pre preocessing
+	// Tests 9-12 Pre processing
 	// What if some entry in a directory ointing to inode 0, is the file inconsistent?
 	// That is why we are starting from 1 in the loops below
     for (int i = 0; i < sb->ninodes; i++) {
@@ -200,6 +194,9 @@ int main(int argc, char *argv[]) {
     				continue;
 	        	struct xv6_dirent *entry = (struct xv6_dirent *)(img_ptr + dip[i].addrs[x] * BSIZE);
 				for (int j=0; j<(BSIZE/sizeof(struct xv6_dirent)); j++) {
+					if(x > 0 || j > 1) {
+						dir_ref[entry[j].inum] += 1;
+					}
 	        		inodes_in_use[entry[j].inum] += 1;
 	        	}
 	        }
@@ -210,6 +207,7 @@ int main(int argc, char *argv[]) {
 	        	struct xv6_dirent *entry = (struct xv6_dirent *)(img_ptr + indirect[x] * BSIZE);
 				for (int j=0; j<(BSIZE/sizeof(struct xv6_dirent)); j++) {
 	        		inodes_in_use[entry[j].inum] += 1;
+	        		dir_ref[entry[j].inum] += 1;
 	        	}
 	        }
         }
@@ -241,7 +239,15 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-
+	// test 12
+	for(int i = 1; i < sb->ninodes; i++) {
+		if(dip[i].type == 1) {
+			if(dir_ref[i] > 1) {
+				fprintf(stderr, "%s", "ERROR: directory appears more than once in file system.\n");
+    	    	exit(1);
+			}
+		}
+	}
 }
 
 //ndirect+1 is indirect block - not sure if we need to check if the indirecr addresses within it are valid or not
