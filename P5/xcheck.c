@@ -68,7 +68,6 @@ int main(int argc, char *argv[]) {
     	}
     }
 
-    // Do we need to round up?
     void* bitmap = (void *) (img_ptr + 3*BSIZE + ((sb->ninodes/IPB)*BSIZE)); 
     void* data_block_start = bitmap + (((sb->nblocks)/(BSIZE*8)));
     if((sb->nblocks)%(BSIZE*8) > 0) {
@@ -115,7 +114,6 @@ int main(int argc, char *argv[]) {
     	}
     }	
 
-    // Do we need to check for T_DEV as well?
     // Checking if dir is properly formatted
     for (int i=0; i < sb->ninodes; i++) {
     	if (dip[i].type == 1) {

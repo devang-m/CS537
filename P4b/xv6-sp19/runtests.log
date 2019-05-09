@@ -32,23 +32,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 509 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -93,23 +93,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 512 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -154,23 +154,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 513 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -215,23 +215,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 510 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -276,23 +276,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 508 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -337,23 +337,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 512 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -398,23 +398,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 516 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -469,23 +469,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 518 blocks have been allocated
 balloc: write bitmap block at sector 28
@@ -532,23 +532,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/tester fs/tester
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-grep
 cat
-stressfs
-forktest
-sh
-README
-zombie
-ln
 wc
-echo
-tester
-clone_basic
-ls
+zombie
 usertests
-init
-kill
+ls
+stressfs
+tester
 rm
+README
+echo
+init
+sh
+forktest
+kill
+grep
+clone_basic
+ln
 mkdir
 balloc: first 511 blocks have been allocated
 balloc: write bitmap block at sector 28

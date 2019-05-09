@@ -26,10 +26,10 @@ Test Good
 run on a good filesystem
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Good
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Good
 
 
-test Good PASSED (5 of 5)
+test Good PASSED (2 of 2)
  (run on a good filesystem)
 
 starting Goodrefcnt
@@ -40,7 +40,7 @@ Test Goodrefcnt
 run on fs with only good reference counts
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrefcnt
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrefcnt
 
 
 test Goodrefcnt PASSED (2 of 2)
@@ -54,7 +54,7 @@ Test Nonexistant
 run on a nonexistant filesystem
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Nonexistant
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Nonexistant
 
 
 test Nonexistant PASSED (2 of 2)
@@ -68,10 +68,10 @@ Test Badroot
 run on a filesystem with a root directory in bad location
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot
 
 
-test Badroot PASSED (5 of 5)
+test Badroot PASSED (2 of 2)
  (run on a filesystem with a root directory in bad location)
 
 starting Badinode
@@ -82,7 +82,7 @@ Test Badinode
 run on a filesystem with a bad type in an inode
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badinode
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badinode
 
 
 test Badinode PASSED (5 of 5)
@@ -96,7 +96,7 @@ Test Badaddr
 run on a filesystem with a bad direct address in an inode
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badaddr
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badaddr
 
 
 test Badaddr PASSED (5 of 5)
@@ -110,7 +110,7 @@ Test Badindir1
 run on a filesystem with a bad indirect address in an inode
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badindir1
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badindir1
 
 
 test Badindir1 PASSED (5 of 5)
@@ -124,7 +124,7 @@ Test Badroot2
 run on a filesystem with a bad root directory in good location
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot2
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badroot2
 
 
 test Badroot2 PASSED (5 of 5)
@@ -138,7 +138,7 @@ Test Badfmt
 run on a filesystem without . or .. directories
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badfmt
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badfmt
 
 
 test Badfmt PASSED (5 of 5)
@@ -152,11 +152,25 @@ Test Mrkfree
 run on a filesystem with an inuse direct block marked free
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkfree
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkfree
 
 
 test Mrkfree PASSED (5 of 5)
  (run on a filesystem with an inuse direct block marked free)
+
+starting Indirfree
+
+**********************************************************************
+
+Test Indirfree
+run on a filesystem with an inuse indirect block marked free
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Indirfree
+
+
+test Indirfree PASSED (5 of 5)
+ (run on a filesystem with an inuse indirect block marked free)
 
 starting Mrkused
 
@@ -166,7 +180,7 @@ Test Mrkused
 run on a filesystem with a free block marked used
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkused
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mrkused
 
 
 test Mrkused PASSED (5 of 5)
@@ -180,7 +194,7 @@ Test Addronce
 run on a filesystem with an address used more than once
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Addronce
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Addronce
 
 
 test Addronce PASSED (5 of 5)
@@ -194,7 +208,7 @@ Test Imrkused
 run with inode marked used, but not referenced in a directory
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkused
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkused
 
 
 test Imrkused PASSED (5 of 5)
@@ -208,7 +222,7 @@ Test Imrkfree
 run with inode marked free, but referenced in a directory
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkfree
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Imrkfree
 
 
 test Imrkfree PASSED (5 of 5)
@@ -222,11 +236,25 @@ Test Badrefcnt
 run on fs which has an inode with a bad reference count
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badrefcnt
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badrefcnt
 
 
 test Badrefcnt PASSED (5 of 5)
  (run on fs which has an inode with a bad reference count)
+
+starting Badindir2
+
+**********************************************************************
+
+Test Badindir2
+run on a filesystem with a bad indirect address in an inode
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Badindir2
+
+
+test Badindir2 PASSED (5 of 5)
+ (run on a filesystem with a bad indirect address in an inode)
 
 starting Dironce
 
@@ -236,7 +264,7 @@ Test Dironce
 run on fs with a directory appearing more than once
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Dironce
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Dironce
 
 
 test Dironce PASSED (5 of 5)
@@ -250,11 +278,25 @@ Test Goodrm
 run on good fs with a file removed and a new directory created
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrm
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrm
 
 
-test Goodrm PASSED (5 of 5)
+test Goodrm PASSED (3 of 3)
  (run on good fs with a file removed and a new directory created)
+
+starting Goodrm2
+
+**********************************************************************
+
+Test Goodrm2
+run on good fs with a new directory created and then a file removed
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodrm2
+
+
+test Goodrm2 PASSED (3 of 3)
+ (run on good fs with a new directory created and then a file removed)
 
 starting Goodlink
 
@@ -264,18 +306,96 @@ Test Goodlink
 run on good fs with some hard links and a linked file removed
 
 **********************************************************************
-/tmp/tmpZC1AMN/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodlink
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodlink
 
 
 test Goodlink PASSED (3 of 3)
  (run on good fs with some hard links and a linked file removed)
+
+starting Goodlarge
+
+**********************************************************************
+
+Test Goodlarge
+run on large good fs
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Goodlarge
+
+
+test Goodlarge PASSED (3 of 3)
+ (run on large good fs)
+
+starting Mismatch
+
+**********************************************************************
+
+Test Mismatch
+**extra** run on a filesystem with .. pointing to the wrong directory
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Mismatch
+Failure: ./xcheck returned incorrect status code. Expected 1 got 0
+
+
+test Mismatch FAILED (0 of 7)
+ (**extra** run on a filesystem with .. pointing to the wrong directory)
+ ./xcheck returned incorrect status code. Expected 1 got 0
+
+starting Loop
+
+**********************************************************************
+
+Test Loop
+**extra**  run on a filesystem with a loop in directory tree
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck /u/c/s/cs537-1/tests/p5/images/Loop
+Failure: ./xcheck returned incorrect status code. Expected 1 got 0
+
+
+test Loop FAILED (0 of 8)
+ (**extra**  run on a filesystem with a loop in directory tree)
+ ./xcheck returned incorrect status code. Expected 1 got 0
+
+starting Repair
+
+**********************************************************************
+
+Test Repair
+**extra**  repair a filesystem with lost inodes. check if every lost inode is found
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck -r /tmp/tmpYK72KC/p/Repair
+Usage: xcheck <file_system_image>
+
+
+test Repair FAILED (0 of 10)
+ (**extra**  repair a filesystem with lost inodes. check if every lost inode is found)
+ image is not correctly repaired.
+
+starting Repair2
+
+**********************************************************************
+
+Test Repair2
+**extra**  repair a filesystem with lost inodes. check if there are any inconsistencies in the repaired image.
+
+**********************************************************************
+/tmp/tmpYK72KC/p/./xcheck -r /tmp/tmpYK72KC/p/Repair2
+Usage: xcheck <file_system_image>
+
+
+test Repair2 FAILED (0 of 5)
+ (**extra**  repair a filesystem with lost inodes. check if there are any inconsistencies in the repaired image.)
+ image is not correctly repaired.
 
 **********************************************************************
 Summary:
 test build PASSED
  (build project using make)
 
-test Good PASSED (5 of 5)
+test Good PASSED (2 of 2)
  (run on a good filesystem)
 
 test Goodrefcnt PASSED (2 of 2)
@@ -284,7 +404,7 @@ test Goodrefcnt PASSED (2 of 2)
 test Nonexistant PASSED (2 of 2)
  (run on a nonexistant filesystem)
 
-test Badroot PASSED (5 of 5)
+test Badroot PASSED (2 of 2)
  (run on a filesystem with a root directory in bad location)
 
 test Badinode PASSED (5 of 5)
@@ -305,6 +425,9 @@ test Badfmt PASSED (5 of 5)
 test Mrkfree PASSED (5 of 5)
  (run on a filesystem with an inuse direct block marked free)
 
+test Indirfree PASSED (5 of 5)
+ (run on a filesystem with an inuse indirect block marked free)
+
 test Mrkused PASSED (5 of 5)
  (run on a filesystem with a free block marked used)
 
@@ -320,15 +443,40 @@ test Imrkfree PASSED (5 of 5)
 test Badrefcnt PASSED (5 of 5)
  (run on fs which has an inode with a bad reference count)
 
+test Badindir2 PASSED (5 of 5)
+ (run on a filesystem with a bad indirect address in an inode)
+
 test Dironce PASSED (5 of 5)
  (run on fs with a directory appearing more than once)
 
-test Goodrm PASSED (5 of 5)
+test Goodrm PASSED (3 of 3)
  (run on good fs with a file removed and a new directory created)
+
+test Goodrm2 PASSED (3 of 3)
+ (run on good fs with a new directory created and then a file removed)
 
 test Goodlink PASSED (3 of 3)
  (run on good fs with some hard links and a linked file removed)
 
-Passed 19 of 19 tests.
-Overall 19 of 19
-Points 82 of 82
+test Goodlarge PASSED (3 of 3)
+ (run on large good fs)
+
+test Mismatch FAILED (0 of 7)
+ (**extra** run on a filesystem with .. pointing to the wrong directory)
+ ./xcheck returned incorrect status code. Expected 1 got 0
+
+test Loop FAILED (0 of 8)
+ (**extra**  run on a filesystem with a loop in directory tree)
+ ./xcheck returned incorrect status code. Expected 1 got 0
+
+test Repair FAILED (0 of 10)
+ (**extra**  repair a filesystem with lost inodes. check if every lost inode is found)
+ image is not correctly repaired.
+
+test Repair2 FAILED (0 of 5)
+ (**extra**  repair a filesystem with lost inodes. check if there are any inconsistencies in the repaired image.)
+ image is not correctly repaired.
+
+Passed 23 of 27 tests.
+Overall 23 of 27
+Points 90 of 120
